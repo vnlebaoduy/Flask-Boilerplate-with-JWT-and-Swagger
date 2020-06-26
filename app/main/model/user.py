@@ -25,3 +25,7 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User '{}'>".format(self.username)
+
+    @classmethod
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username = username).first()
