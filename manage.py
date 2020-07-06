@@ -6,7 +6,7 @@ from flask_script import Manager
 from app.main.model import user,revoked_tokens
 from app import blueprint
 from flask_jwt_extended import JWTManager,get_jwt_claims,verify_jwt_in_request
-
+from flask import jsonify
 from app.main import create_app, db
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')

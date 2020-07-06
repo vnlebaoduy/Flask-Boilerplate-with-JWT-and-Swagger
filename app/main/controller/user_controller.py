@@ -1,10 +1,9 @@
 from flask import request
 from flask_restplus import Resource,reqparse
-
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user,user_login
+from ..service.user_service import save_new_user, get_all_users, get_a_user,user_login,get_a_user_by_username
 from flask_jwt_extended import jwt_required
-
+from app.main.util.decorator import admin_token_required
 api = UserDto.api
 _user = UserDto.user
 
@@ -33,7 +32,16 @@ class UserLogin(Resource):
         data = request.json
         return user_login(data['username'],data['password'])
         
-
+@api.route('/info')
+@api.response(404, 'User not found.')
+class UserInfo(Resource):
+    @api.doc('get a user')
+    @api.marshal_with(_user)
+    @jwt_required
+    @admin_token_required
+    def get(self):
+        user = get_a_user_by_username()
+        return user
 
 @api.route('/<public_id>')
 @api.param('public_id', 'The User identifier')

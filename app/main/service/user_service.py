@@ -1,14 +1,13 @@
 import uuid
 import datetime
-
 from app.main import db
 from app.main.model.user import User
-
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
 JWT_REFRESH_TOKEN_EXPIRES = 15552000  # seconds
-JWT_ACCESS_TOKEN_EXPIRES = 600 
+JWT_ACCESS_TOKEN_EXPIRES = 600
+
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
@@ -40,6 +39,11 @@ def get_all_users():
 
 def get_a_user(public_id):
     return User.query.filter_by(public_id=public_id).first()
+
+
+def get_a_user_by_username():
+    username = get_jwt_identity()
+    return User.query.filter_by(username=username).first()
 
 
 def save_changes(data):
