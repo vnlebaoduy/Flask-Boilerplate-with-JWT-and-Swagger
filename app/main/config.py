@@ -1,12 +1,17 @@
 import os
-
+import configparser
 # uncomment the line below for postgres database url from environment variable
 # postgres_local_base = os.environ['DATABASE_URL']
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
+config = configparser.ConfigParser()
+basedir= os.path.abspath(os.curdir)
+config.read(os.path.join(basedir,'config.ini'))
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious_secret_key')
+    env=config
+    JWT_SECRET_KEY = config.get('JWT', 'JWT_SECRET_KEY')
+    JWT_REFRESH_TOKEN_EXPIRES=int(config['JWT']['JWT_REFRESH_TOKEN_EXPIRES'])
+    JWT_ACCESS_TOKEN_EXPIRES=int(config['JWT']['JWT_ACCESS_TOKEN_EXPIRES'])
     DEBUG = False
 
 
@@ -38,4 +43,4 @@ config_by_name = dict(
     prod=ProductionConfig
 )
 
-key = Config.SECRET_KEY
+key = Config.JWT_SECRET_KEY

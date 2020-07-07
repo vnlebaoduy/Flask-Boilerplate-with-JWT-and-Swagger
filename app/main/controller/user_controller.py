@@ -10,8 +10,9 @@ _user = UserDto.user
 @api.route('/')
 class UserList(Resource):
     @api.doc('list_of_registered_users')
-    @jwt_required
     @api.marshal_list_with(_user, envelope='data')
+    @jwt_required
+    @admin_token_required
     def get(self):
         """List all registered users"""
         return get_all_users()
@@ -32,13 +33,12 @@ class UserLogin(Resource):
         data = request.json
         return user_login(data['username'],data['password'])
         
-@api.route('/info')
+@api.route('/info/me')
 @api.response(404, 'User not found.')
 class UserInfo(Resource):
     @api.doc('get a user')
     @api.marshal_with(_user)
     @jwt_required
-    @admin_token_required
     def get(self):
         user = get_a_user_by_username()
         return user

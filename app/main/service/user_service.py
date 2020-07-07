@@ -5,8 +5,11 @@ from app.main.model.user import User
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
-JWT_REFRESH_TOKEN_EXPIRES = 15552000  # seconds
-JWT_ACCESS_TOKEN_EXPIRES = 600
+from app.main.config import Config
+
+JWT_ACCESS_TOKEN_EXPIRES=int(Config.env['JWT']['JWT_ACCESS_TOKEN_EXPIRES'])
+JWT_REFRESH_TOKEN_EXPIRES=int(Config.env['JWT']['JWT_REFRESH_TOKEN_EXPIRES'])
+
 
 
 def save_new_user(data):
@@ -67,10 +70,9 @@ def user_login(username, password):
             identity=username, expires_delta=expiresRefreshToken)
         return {
             'message': 'Logged in as {}'.format(current_user.username),
-            'username': current_user.username,
             'access_token': access_token,
             'refresh_token': refresh_token,
-            'expires': JWT_ACCESS_TOKEN_EXPIRES,
+            'expires':JWT_ACCESS_TOKEN_EXPIRES,
         }
     else:
         return {'message': 'Wrong credentials'}, 403
