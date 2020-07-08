@@ -9,9 +9,6 @@ basedir= os.path.abspath(os.curdir)
 config.read(os.path.join(basedir,'config.ini'))
 class Config:
     env=config
-    JWT_SECRET_KEY = config.get('JWT', 'JWT_SECRET_KEY')
-    JWT_REFRESH_TOKEN_EXPIRES=int(config['JWT']['JWT_REFRESH_TOKEN_EXPIRES'])
-    JWT_ACCESS_TOKEN_EXPIRES=int(config['JWT']['JWT_ACCESS_TOKEN_EXPIRES'])
     DEBUG = False
 
 
@@ -42,5 +39,3 @@ config_by_name = dict(
     test=TestingConfig,
     prod=ProductionConfig
 )
-
-key = Config.JWT_SECRET_KEY
