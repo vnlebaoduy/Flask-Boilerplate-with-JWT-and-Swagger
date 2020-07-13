@@ -26,7 +26,7 @@ class UserList(Resource):
         return save_new_user(data=data)
 
 
-@api.route('/login')
+@api.route('/token')
 @api.response(403, 'Wrong credentials')
 class UserLogin(Resource):
     def post(self):
