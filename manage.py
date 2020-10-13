@@ -2,14 +2,13 @@ import os
 import unittest
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from app.main.model import user,revoked_tokens
+from app.main.model import user,role,permission,revoked_tokens
 from app import blueprint
 from flask_jwt_extended import JWTManager,get_jwt_claims,verify_jwt_in_request
 from flask import jsonify
 from app.main import create_app, db
 from app.main.config import Config
 
-print(Config.env['APP']['ENVIRONMENT'])
 #Create App
 app = create_app('dev')
 app.config['PROPAGATE_EXCEPTIONS'] = True
