@@ -3,12 +3,11 @@ import configparser
 # uncomment the line below for postgres database url from environment variable
 # postgres_local_base = os.environ['DATABASE_URL']
 
+from os import environ, path
 
-config = configparser.ConfigParser()
 basedir= os.path.abspath(os.curdir)
-config.read(os.path.join(basedir,'config.ini'))
+
 class Config:
-    env=config
     DEBUG = False
 
 
@@ -35,7 +34,7 @@ class ProductionConfig(Config):
 
 
 config_by_name = dict(
-    dev=DevelopmentConfig,
+    development=DevelopmentConfig,
     test=TestingConfig,
-    prod=ProductionConfig
+    production=ProductionConfig
 )

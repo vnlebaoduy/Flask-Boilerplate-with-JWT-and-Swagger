@@ -2,33 +2,45 @@ import os
 import unittest
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from app.main.model import user,permission,revoked_tokens
+from app.main.model import user, permission, revoked_tokens
 from app import blueprint
 from flask_jwt_extended import JWTManager
 from flask import jsonify
 from app.main import create_app, db
-from app.main.config import Config
+from werkzeug.exceptions import HTTPException
+from os import environ, path
+from dotenv import load_dotenv
 
+# Loading Environment
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
-#Create App
-app = create_app('dev')
+# Create App
+app = create_app(environ.get('FLASK_ENV', 'development'))
 app.config['PROPAGATE_EXCEPTIONS'] = True
-app.config['JWT_SECRET_KEY'] = Config.env['JWT']['JWT_SECRET_KEY']
+app.config['JWT_SECRET_KEY'] = environ.get('JWT_SECRET_KEY', 'jwt-secret-string')
 jwt = JWTManager(app)
 
-#Config JWT & blueprint
+# Config JWT & blueprint
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 app.config.setdefault('RESTPLUS_MASK_SWAGGER', False)
 app.register_blueprint(blueprint)
 app.app_context().push()
 
-
 manager = Manager(app)
 
 migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return jsonify(message=str(e)), code
 
 
 @jwt.token_in_blacklist_loader
@@ -49,6 +61,7 @@ def my_expired_token_callback():
 def run():
     app.run()
 
+
 @manager.command
 def test():
     """Runs the unit tests."""
@@ -57,6 +70,7 @@ def test():
     if result.wasSuccessful():
         return 0
     return 1
+
 
 if __name__ == '__main__':
     manager.run()

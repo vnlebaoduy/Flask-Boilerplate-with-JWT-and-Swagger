@@ -38,7 +38,6 @@ class UserLogin(Resource):
 class UserInfo(Resource):
     @api.doc('get a user')
     @api.marshal_with(_user)
-    @jwt_required
     def get(self):
         user = get_a_user_by_username()
         return user
