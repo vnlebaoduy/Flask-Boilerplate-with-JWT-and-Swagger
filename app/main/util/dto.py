@@ -7,8 +7,16 @@ class UserDto:
         'email': fields.String(required=True, description='Địa chỉ email'),
         'username': fields.String(required=True, description='Tên đăng nhập'),
         'password': fields.String(required=True, description='Mật khẩu'),
-        'public_id': fields.String(description='Mã người dùng')
+        'public_id': fields.String(description='Mã người dùng'),
+        'registered_on': fields.String(description='Ngày tạo'),
+        'is_active': fields.Boolean(description='Trạng thái kích hoạt')
     })
+
+    userLogin = api.model('user', {
+        'username': fields.String(required=True, description='Tên đăng nhập'),
+        'password': fields.String(required=True, description='Mật khẩu'),
+    })
+
 
 class RoleDto:
     api = Namespace('role', description='roles')

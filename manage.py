@@ -11,9 +11,7 @@ from werkzeug.exceptions import HTTPException
 from os import environ, path
 from dotenv import load_dotenv
 
-# Loading Environment
-basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, '.env'))
+
 
 # Create App
 app = create_app(environ.get('FLASK_ENV', 'development'))

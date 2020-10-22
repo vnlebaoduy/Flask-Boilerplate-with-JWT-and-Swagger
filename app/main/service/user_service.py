@@ -7,8 +7,8 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
 
 from os import environ, path
 
-JWT_ACCESS_TOKEN_EXPIRES = environ.get('JWT_ACCESS_TOKEN_EXPIRES')
-JWT_REFRESH_TOKEN_EXPIRES = environ.get('JWT_REFRESH_TOKEN_EXPIRES', 15552000)
+JWT_ACCESS_TOKEN_EXPIRES = environ.get('JWT_ACCESS_TOKEN_EXPIRES', 60)
+JWT_REFRESH_TOKEN_EXPIRES = environ.get('JWT_REFRESH_TOKEN_EXPIRES', 6000)
 
 
 def save_new_user(data):
@@ -40,12 +40,14 @@ def get_all_users():
 
 
 def get_a_user(public_id):
-    return User.query.filter_by(public_id=public_id).first()
+    user = User.query.filter_by(public_id=public_id).first()
+    return user
 
 
-def get_a_user_by_username():
-    username = get_jwt_identity()
-    return User.query.filter_by(username=username).first()
+def get_role():
+    public_id = get_jwt_identity()
+    user = User.query.filter_by(public_id=public_id).first()
+
 
 
 def save_changes(data):
@@ -56,17 +58,17 @@ def save_changes(data):
 def user_login(username, password):
     current_user = User.find_by_username(username)
     if not current_user:
-        return {'message': 'User {} doesn\'t exist'.format(username)}
+        return {'status': 'fail', 'message': 'User {} doesn\'t exist'.format(username)}, 401
 
     if current_user and current_user.check_password(password):
         expiresAccesToken = datetime.timedelta(
-            seconds=JWT_ACCESS_TOKEN_EXPIRES)
+            seconds=int(JWT_ACCESS_TOKEN_EXPIRES))
         expiresRefreshToken = datetime.timedelta(
-            seconds=JWT_REFRESH_TOKEN_EXPIRES)
+            seconds=int(JWT_REFRESH_TOKEN_EXPIRES))
         access_token = create_access_token(
-            identity=username, expires_delta=expiresAccesToken)
+            identity=current_user.public_id, expires_delta=expiresAccesToken)
         refresh_token = create_refresh_token(
-            identity=username, expires_delta=expiresRefreshToken)
+            identity=current_user.public_id, expires_delta=expiresRefreshToken)
         return {
             'message': 'Logged in as {}'.format(current_user.username),
             'access_token': access_token,

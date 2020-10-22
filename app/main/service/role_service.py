@@ -15,11 +15,12 @@ def create_role(data):
         'role_name': name,
         'role_description': des
     }
-    return res_obj,201
+    return res_obj, 201
 
 
 def get_all_role():
-    Role.query.all()
+    role = Role.query.all()
+    return role
 
 
 def save_changes(data):
