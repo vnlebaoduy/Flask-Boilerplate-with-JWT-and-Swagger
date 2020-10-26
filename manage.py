@@ -74,7 +74,7 @@ def test():
 
 
 @manager.command
-def cleardb():
+def clear():
     try:
         db.session.query(role.Role).delete()
         db.session.query(user.User).delete()
