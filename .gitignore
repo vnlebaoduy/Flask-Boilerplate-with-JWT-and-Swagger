@@ -1,3 +1,7 @@
 flask_boilerplate_main.db
 flask_boilerplate_test.db
 /migrations
+__pycache__
+.idea
+.vscode
+.pytest_cache

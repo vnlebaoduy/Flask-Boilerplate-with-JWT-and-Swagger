@@ -19,7 +19,8 @@ load_dotenv(path.join(basedir, '.env'))
 # Create App
 app = create_app(environ.get('FLASK_ENV', 'development'))
 app.config['PROPAGATE_EXCEPTIONS'] = True
-app.config['JWT_SECRET_KEY'] = environ.get('JWT_SECRET_KEY', 'jwt-secret-string')
+app.config['JWT_SECRET_KEY'] = environ.get(
+    'JWT_SECRET_KEY', 'jwt-secret-string')
 jwt = JWTManager(app)
 
 # Config JWT & blueprint

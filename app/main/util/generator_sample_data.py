@@ -7,15 +7,15 @@ import uuid
 import os
 import json
 
-os.chdir(os.path.dirname(__file__))
 
 
 class Seed:
     @staticmethod
     def gen_role():
         logging.info("Generating Role ...")
+        os.chdir(os.path.dirname(__file__))
         path = os.getcwd()
-        with open(os.path.join(path, './sample/role.json')) as json_file:
+        with open(os.path.join(path, 'sample/role.json')) as json_file:
             data = json.load(json_file)
             for p in data:
                 user_role = Role(name=p['name'], description=p['description'], created_at=datetime.now(),

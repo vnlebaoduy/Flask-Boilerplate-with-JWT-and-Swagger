@@ -11,7 +11,8 @@ def register_user(self):
         data=json.dumps(dict(
             email='lebaoduy1993@gmail.com',
             username='vnlebaoduy',
-            password='123456'
+            password='123456',
+            full_name='ADMIN'
         )),
         content_type='application/json'
     )
@@ -43,6 +44,7 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             response = register_user(self)
             data = json.loads(response.data.decode())
+            print('data',data)
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully registered.')
             self.assertTrue(response.content_type == 'application/json')
