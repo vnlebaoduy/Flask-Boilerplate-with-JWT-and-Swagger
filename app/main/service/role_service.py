@@ -13,7 +13,7 @@ def create_role(data):
     if not check_role:
         user = User.query.filter_by(public_id=public_id).first()
         role = Role(name=name, description=des,
-                    created_at=datetime.datetime.now(), created_by=user.username)
+                    created_at=datetime.datetime.utcnow(), created_by=user.username)
         save_changes(role)
         res_obj = {
             'status': 'success',

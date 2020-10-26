@@ -145,7 +145,6 @@ class TestRoleBlueprint(BaseTestCase):
             # delete role
             res_delete_role = delete_role(self, data['access_token'])
             data_delete_role = json.loads(res_delete_role.data.decode())
-            print('daa', data_delete_role)
             self.assertTrue(data_delete_role['status'] == 'success')
             self.assertTrue(res_delete_role.status_code == 200)
 

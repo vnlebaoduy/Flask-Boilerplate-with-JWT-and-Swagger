@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 metadata = MetaData()
 user_role_table = db.Table('user_role',
-                           db.Column('id',db.Integer, primary_key=True, autoincrement=True),
+                           db.Column('id', db.Integer, primary_key=True, autoincrement=True),
                            db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                            db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
 
@@ -17,11 +17,12 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     public_id = db.Column(db.String(100), unique=True)
+    full_name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(50), unique=True)
     password_hash = db.Column(db.String(100))
     is_active = db.Column(db.Boolean, unique=False, default=True)
     role = db.relationship('Role', secondary=user_role_table,
-                                backref=db.backref('user_role', lazy='dynamic'))
+                           backref=db.backref('user_role', lazy='dynamic'))
 
     @property
     def password(self):

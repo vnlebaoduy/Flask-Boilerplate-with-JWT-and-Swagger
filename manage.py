@@ -2,16 +2,19 @@ import os
 import unittest
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from app.main.model import user, permission, revoked_tokens
+from app.main.model import user, role, permission, revoked_tokens
 from app import blueprint
 from flask_jwt_extended import JWTManager
 from flask import jsonify
 from app.main import create_app, db
 from werkzeug.exceptions import HTTPException
 from os import environ, path
+from app.main.util.generator_sample_data import Seed
 from dotenv import load_dotenv
 
-
+# Loading Environment
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
 # Create App
 app = create_app(environ.get('FLASK_ENV', 'development'))
@@ -68,6 +71,22 @@ def test():
     if result.wasSuccessful():
         return 0
     return 1
+
+
+@manager.command
+def cleardb():
+    try:
+        db.session.query(role.Role).delete()
+        db.session.query(user.User).delete()
+        db.session.commit()
+    except:
+        db.session.rollback()
+
+
+@manager.command
+def seed():
+    Seed.gen_role()
+    Seed.gen_user()
 
 
 if __name__ == '__main__':

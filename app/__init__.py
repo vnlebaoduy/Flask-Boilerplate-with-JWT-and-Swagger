@@ -1,7 +1,6 @@
 from flask_restplus import Api
 from flask import Blueprint
-from os import environ, path
-from dotenv import load_dotenv
+from os import environ
 from .main.controller.user_controller import api as user_ns
 from .main.controller.role_controller import api as role_ns
 
@@ -14,10 +13,6 @@ authorizations = {
         'name': 'jwt'
     }
 }
-
-# Loading Environment
-basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, '.env'))
 
 api = Api(blueprint,
           authorizations=authorizations,

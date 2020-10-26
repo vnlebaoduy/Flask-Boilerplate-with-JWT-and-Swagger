@@ -1,0 +1,10 @@
+[
+  {
+    "name": "USER_ROLE",
+    "description": "Quyền truy cập thông thường"
+  },
+  {
+    "name": "ADMIN_ROLE",
+    "description": "Cho phép quyền truy cập cao nhất"
+  }
+]
