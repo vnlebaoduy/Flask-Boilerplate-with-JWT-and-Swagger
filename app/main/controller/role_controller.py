@@ -1,6 +1,6 @@
 from flask import request
 from flask_restplus import Resource, reqparse
-from ..service.role_service import get_all_role, create_role, delete_role_id
+from ..service.role_service import get_all_role, create_role, delete_role_id, set_role_user_by_ids, update_role_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..util.dto import RoleDto
 
@@ -43,3 +43,31 @@ class DeleteRole(Resource):
     def delete(self, role_id):
         """Delete a Role By id """
         return delete_role_id(role_id=role_id)
+
+
+@api.route('/set_role/<user_id>')
+@api.doc('set role')
+class SetRole(Resource):
+    @api.param('role_id', 'Role identifier')
+    @api.response(201, 'Role successfully set.')
+    @jwt_required
+    def post(self, user_id):
+        """Set Role By id """
+        data = request.json
+        res = set_role_user_by_ids(data['role_id'], user_id)
+        return res
+
+
+@api.route('/update_role')
+@api.doc('set role')
+class SetRole(Resource):
+    @api.param('id', 'Role identifier')
+    @api.param('name', 'Name')
+    @api.param('description', 'Description')
+    @api.response(200, 'Role successfully set.')
+    @jwt_required
+    def put(self):
+        """Set Role By id """
+        data = request.json
+        res = update_role_by_id(data)
+        return res

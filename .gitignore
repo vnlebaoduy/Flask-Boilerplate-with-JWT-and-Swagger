@@ -1,5 +1,6 @@
 flask_boilerplate_main.db
 flask_boilerplate_test.db
+/app/test/flask_boilerplate_test.db
 /migrations
 __pycache__
 .idea

@@ -45,11 +45,6 @@ def get_a_user(public_id):
     return user
 
 
-def get_role():
-    public_id = get_jwt_identity()
-    user = User.query.filter_by(public_id=public_id).first()
-    print(user)
-
 
 def save_changes(data):
     db.session.add(data)

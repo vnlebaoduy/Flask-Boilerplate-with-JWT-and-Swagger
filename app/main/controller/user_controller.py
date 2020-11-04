@@ -7,7 +7,7 @@ from app.main.util.decorator import admin_token_required
 
 api = UserDto.api
 _user = UserDto.user
-_userLogin= UserDto.userLogin
+_userLogin = UserDto.userLogin
 
 
 @api.route('/')
@@ -61,6 +61,7 @@ class User(Resource):
             api.abort(404)
         else:
             return user
+
 
 @api.route('/role')
 class User(Resource):

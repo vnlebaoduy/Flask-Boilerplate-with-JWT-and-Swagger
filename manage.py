@@ -42,7 +42,7 @@ def handle_error(e):
     code = 500
     if isinstance(e, HTTPException):
         code = e.code
-    return jsonify(message=str(e)), code
+    return jsonify({'status': 'fail', 'message': str(e)}), code
 
 
 @jwt.token_in_blacklist_loader
@@ -54,7 +54,7 @@ def check_if_token_in_blacklist(decrypted_token):
 @jwt.expired_token_loader
 def my_expired_token_callback():
     return jsonify({
-        'status': 401,
+        'status': 'fail',
         'message': 'The token has expired'
     }), 401
 

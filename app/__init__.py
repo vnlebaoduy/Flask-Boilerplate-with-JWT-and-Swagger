@@ -10,11 +10,13 @@ authorizations = {
     'apikey': {
         'type': 'apiKey',
         'in': 'header',
-        'name': 'jwt'
+        'name': 'Authorization',
+        'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
     }
 }
 
 api = Api(blueprint,
+          security = 'apikey',
           authorizations=authorizations,
           title=environ.get('APP_TITLE', 'REST API'),
           version=environ.get('APP_VERSION', '0.1'),

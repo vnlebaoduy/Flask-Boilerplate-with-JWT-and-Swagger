@@ -8,7 +8,6 @@ import os
 import json
 
 
-
 class Seed:
     @staticmethod
     def gen_role():
@@ -18,7 +17,7 @@ class Seed:
         with open(os.path.join(path, 'sample/role.json')) as json_file:
             data = json.load(json_file)
             for p in data:
-                user_role = Role(name=p['name'], description=p['description'], created_at=datetime.now(),
+                user_role = Role(name=p['name'], description=p['description'], created_at=datetime.utcnow(),
                                  created_by='')
                 db.session.add(user_role)
             try:
@@ -31,6 +30,7 @@ class Seed:
     @staticmethod
     def gen_user():
         logging.info("Generating User ...")
+        os.chdir(os.path.dirname(__file__))
         path = os.getcwd()
         with open(os.path.join(path, './sample/user.json')) as json_file:
             data = json.load(json_file)

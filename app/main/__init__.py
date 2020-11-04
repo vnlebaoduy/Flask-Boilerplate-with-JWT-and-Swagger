@@ -5,9 +5,11 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 import sentry_sdk
 from os import environ
 from .config import config_by_name
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
+ma = Marshmallow()
 
 
 def create_app(config_name):
@@ -20,5 +22,6 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
     db.init_app(app)
+    ma.init_app(app)
     flask_bcrypt.init_app(app)
     return app

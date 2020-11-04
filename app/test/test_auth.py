@@ -44,7 +44,6 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             response = register_user(self)
             data = json.loads(response.data.decode())
-            print('data',data)
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully registered.')
             self.assertTrue(response.content_type == 'application/json')

@@ -1,12 +1,8 @@
-from .. import db, flask_bcrypt
-from sqlalchemy import Table, Integer, ForeignKey, MetaData
+from .. import db, flask_bcrypt, ma
+from sqlalchemy import Table, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-
-metadata = MetaData()
-user_role_table = db.Table('user_role',
-                           db.Column('id', db.Integer, primary_key=True, autoincrement=True),
-                           db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                           db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
+import datetime
+from ..model.role import Role
 
 
 class User(db.Model):
@@ -21,8 +17,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True)
     password_hash = db.Column(db.String(100))
     is_active = db.Column(db.Boolean, unique=False, default=True)
-    role = db.relationship('Role', secondary=user_role_table,
-                           backref=db.backref('user_role', lazy='dynamic'))
+    role = db.relationship('Role', secondary='user_role')
 
     @property
     def password(self):
@@ -41,3 +36,21 @@ class User(db.Model):
     @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
+
+
+
+
+
+class UserRole(db.Model):
+    __tablename__ = 'user_role'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
+    created_by = db.Column(db.String(255), nullable=True)
+    user = db.relationship(User, backref=db.backref("role_user_assoc"))
+    role = db.relationship(Role, backref=db.backref("user_role_assoc"))
+
+    def __repr__(self):
+        return "<UserRole '{} - {} - {} - {}'>".format(self.user_id, self.role_id, self.created_at, self.created_by)
+

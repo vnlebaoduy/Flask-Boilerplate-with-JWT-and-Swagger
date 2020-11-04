@@ -1,19 +1,21 @@
-from app.main.model.role import Role
+from app.main.model.role import Role, RoleSchema
+from sqlalchemy.sql import select
 import datetime
 from app.main import db
-from app.main.model.user import User
+from app.main.model.user import User, UserRole
 from flask_jwt_extended import get_jwt_identity
+from flask import jsonify
+import json
 
 
 def create_role(data):
     public_id = get_jwt_identity()
     name = data['name'].strip()
-    des = data['description']
+    des = data['description'].strip()
     check_role = Role.query.filter_by(name=name).first()
     if not check_role:
         user = User.query.filter_by(public_id=public_id).first()
-        role = Role(name=name, description=des,
-                    created_at=datetime.datetime.utcnow(), created_by=user.username)
+        role = Role(name=name, description=des, created_by=user.username)
         save_changes(role)
         res_obj = {
             'status': 'success',
@@ -24,10 +26,39 @@ def create_role(data):
         return res_obj, 201
     else:
         res_obj = {
-            'status': 'conflict',
+            'status': 'fail',
             'message': 'Role {} already exists.'.format(name),
         }
         return res_obj, 409
+
+
+def update_role_by_id(data):
+    id_role = data['id']
+    name = data['name'].strip()
+    des = data['description'].strip()
+    if len(name) <= 0:
+        res_obj = {
+            'status': 'fail',
+            'message': 'Missing param "name"',
+        }
+        return res_obj, 422
+    elif len(des) <= 0:
+        res_obj = {
+            'status': 'fail',
+            'message': 'Missing param "description"',
+        }
+        return res_obj, 422
+    else:
+        role = Role.query.filter_by(id=id_role).first()
+        role.name = name
+        role.description = des
+        save_changes(role)
+        res_obj = {
+            'status': 'success',
+            'name': name,
+            'description': des
+        }
+        return res_obj, 200
 
 
 def delete_role_id(role_id):
@@ -41,7 +72,7 @@ def delete_role_id(role_id):
         return res_obj, 200
     else:
         res_obj = {
-            'status': 'failure',
+            'status': 'fail',
             'message': 'Role id={} not found.'.format(role_id),
         }
         return res_obj, 404
@@ -50,6 +81,35 @@ def delete_role_id(role_id):
 def get_all_role():
     role = Role.query.all()
     return role
+
+
+# TODO: return list role error
+def set_role_user_by_ids(role_id, public_id):
+    public_id_creator = get_jwt_identity()
+    user_creator = User.query.filter_by(public_id=public_id_creator).first()
+    user = User.query.filter_by(public_id=public_id).first()
+
+    get_user_role = UserRole.query.filter_by(role_id=role_id).filter_by(user_id=user.id).first()
+    if not get_user_role:
+        role = Role.query.filter_by(id=role_id).first()
+
+        user_role_add = UserRole(user=user, role=role, created_by=user_creator.username)
+        save_changes(user_role_add)
+
+        list_role_2 = db.session.query(Role).join(UserRole).join(User).filter(UserRole.user_id == user.id).all()
+        roles_schema = RoleSchema(many=True)
+        res_data = roles_schema.dump(list_role_2)
+        res_obj = {
+            'status': 'success',
+            'roles': res_data
+        }
+        return res_obj, 201
+    else:
+        response_object = {
+            'status': 'fail',
+            'message': 'Role already exists!',
+        }
+        return response_object, 409
 
 
 def delete_changes(data):
