@@ -1,0 +1,18 @@
+[
+  {
+    "name": "ROLE_CREATE",
+    "description": "Tạo vai trò truy cập"
+  },
+  {
+    "name": "ROLE_REMOVE",
+    "description": "Xoá vai trò"
+  },
+  {
+    "name": "USER_CREATE",
+    "description": "Tạo người dùng"
+  },
+  {
+    "name": "USER_UPDATE",
+    "description": "Cập nhật thông tin người dùng"
+  }
+]

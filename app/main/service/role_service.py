@@ -1,11 +1,7 @@
 from app.main.model.role import Role, RoleSchema
-from sqlalchemy.sql import select
-import datetime
 from app.main import db
 from app.main.model.user import User, UserRole
 from flask_jwt_extended import get_jwt_identity
-from flask import jsonify
-import json
 
 
 def create_role(data):
@@ -20,8 +16,8 @@ def create_role(data):
         res_obj = {
             'status': 'success',
             'message': 'Role is created',
-            'role_name': name,
-            'role_description': des
+            'name': name,
+            'description': des
         }
         return res_obj, 201
     else:
@@ -39,13 +35,13 @@ def update_role_by_id(data):
     if len(name) <= 0:
         res_obj = {
             'status': 'fail',
-            'message': 'Missing param "name"',
+            'message': 'param "name" is missing',
         }
         return res_obj, 422
     elif len(des) <= 0:
         res_obj = {
             'status': 'fail',
-            'message': 'Missing param "description"',
+            'message': 'param "description" is missing',
         }
         return res_obj, 422
     else:
@@ -67,7 +63,7 @@ def delete_role_id(role_id):
         delete_changes(role)
         res_obj = {
             'status': 'success',
-            'message': 'Role {} deleted.'.format(role.name),
+            'message': 'Role {} has been deleted.'.format(role.name),
         }
         return res_obj, 200
     else:
@@ -83,7 +79,6 @@ def get_all_role():
     return role
 
 
-# TODO: return list role error
 def set_role_user_by_ids(role_id, public_id):
     public_id_creator = get_jwt_identity()
     user_creator = User.query.filter_by(public_id=public_id_creator).first()

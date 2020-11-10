@@ -1,10 +1,12 @@
 [
   {
-    "name": "USER_ROLE",
-    "description": "Quyền truy cập thông thường"
+    "id": "1",
+    "name": "ADMIN_ROLE",
+    "description": "Vai trò quản trị cao nhất"
   },
   {
-    "name": "ADMIN_ROLE",
-    "description": "Cho phép quyền truy cập cao nhất"
+    "id": "2",
+    "name": "USER_ROLE",
+    "description": "Vai trò người dùng cơ bản"
   }
 ]

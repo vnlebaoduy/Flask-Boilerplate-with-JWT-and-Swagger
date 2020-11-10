@@ -78,16 +78,23 @@ def test():
 def clear():
     try:
         db.session.query(role.Role).delete()
+        db.session.query(role.RolePermission).delete()
         db.session.query(user.User).delete()
+        db.session.query(user.UserRole).delete()
+        db.session.query(permission.Permission).delete()
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        print(str(e))
 
 
 @manager.command
 def seed():
     Seed.gen_role()
     Seed.gen_user()
+    Seed.gen_permission()
+    Seed.gen_user_role()
+    Seed.gen_role_permission()
 
 
 if __name__ == '__main__':

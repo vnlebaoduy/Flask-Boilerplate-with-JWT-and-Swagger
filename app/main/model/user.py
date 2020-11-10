@@ -11,7 +11,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    registered_on = db.Column(db.DateTime, nullable=False)
+    registered_on = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
     public_id = db.Column(db.String(100), unique=True)
     full_name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(50), unique=True)
@@ -38,9 +38,6 @@ class User(db.Model):
         return cls.query.filter_by(username=username).first()
 
 
-
-
-
 class UserRole(db.Model):
     __tablename__ = 'user_role'
 
@@ -53,4 +50,3 @@ class UserRole(db.Model):
 
     def __repr__(self):
         return "<UserRole '{} - {} - {} - {}'>".format(self.user_id, self.role_id, self.created_at, self.created_by)
-

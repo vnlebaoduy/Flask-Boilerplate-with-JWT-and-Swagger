@@ -37,3 +37,23 @@ class RoleDto:
     set_role = api.model('role', {
         'role_id': fields.Arbitrary(required=True, description='Mã vai trò'),
     })
+
+
+class PermissionDto:
+    api = Namespace('permission', description='permissions')
+    permission = api.model('permission', {
+        'id': fields.Integer(required=True, description='Mã quyền truy cập'),
+        'name': fields.String(required=True, description='Tên quyền truy cập'),
+        'description': fields.String(required=True, description='Mô tả quyền truy cập'),
+        # 'created_at': fields.String(required=True, description='Ngày tạo vai trò'),
+    })
+
+    permission_create = api.model('permission', {
+        'name': fields.String(required=True, description='Tên quyền truy cập'),
+        'description': fields.String(required=True, description='Mô tả quyền truy cập'),
+        # 'created_at': fields.String(required=True, description='Ngày tạo vai trò'),
+    })
+
+    set_role = api.model('permission', {
+        'permission_id': fields.Arbitrary(required=True, description='Mã quyền truy cập'),
+    })

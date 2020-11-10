@@ -45,7 +45,6 @@ def get_a_user(public_id):
     return user
 
 
-
 def save_changes(data):
     db.session.add(data)
     db.session.commit()

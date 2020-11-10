@@ -4,14 +4,14 @@ from app.test.base import BaseTestCase
 import app.test.test_auth as Auth
 
 
-def creat_role(self, access_token):
+def create_role(self, access_token):
     return self.client.post(
         '/role/',
         headers={
             'Authorization': 'Bearer {}'.format(access_token)
         },
         data=json.dumps(dict(
-            name="USER_ROLE",
+            name="USER_ROLE_2",
             description="Quyền truy cập user cơ bản"
         )),
         content_type='application/json'
@@ -30,7 +30,7 @@ def get_all_role(self, access_token):
 
 def delete_role(self, access_token):
     return self.client.delete(
-        '/role/1',
+        '/role/3',
         headers={
             'Authorization': 'Bearer {}'.format(access_token)
         },
@@ -45,7 +45,7 @@ def set_role(self, access_token, public_id):
             'Authorization': 'Bearer {}'.format(access_token)
         },
         data=json.dumps(dict(
-            role_id=1,
+            role_id=2,
         )),
         content_type='application/json'
     )
@@ -67,7 +67,7 @@ def update_role(self, access_token):
 
 
 class TestRoleBlueprint(BaseTestCase):
-    def test_create_role(self):
+    def test_role_create(self):
         with self.client:
             # user registration
             resp_register = Auth.register_user(self)
@@ -85,13 +85,13 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             # create role
-            res_creat_role = creat_role(self, data['access_token'])
-            data_create_role = json.loads(res_creat_role.data.decode())
+            res_create_role = create_role(self, data['access_token'])
+            data_create_role = json.loads(res_create_role.data.decode())
             self.assertTrue(data_create_role['status'] == 'success')
-            self.assertTrue(res_creat_role.content_type == 'application/json')
-            self.assertEqual(res_creat_role.status_code, 201)
+            self.assertTrue(res_create_role.content_type == 'application/json')
+            self.assertEqual(res_create_role.status_code, 201)
 
-    def test_create_role_already(self):
+    def test_role_create_already(self):
         with self.client:
             # user registration
             resp_register = Auth.register_user(self)
@@ -110,13 +110,13 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             # create conflict
-            creat_role(self, data['access_token'])
-            res_create_role_conflict = creat_role(self, data['access_token'])
+            create_role(self, data['access_token'])
+            res_create_role_conflict = create_role(self, data['access_token'])
             data_create_role = json.loads(res_create_role_conflict.data.decode())
             self.assertTrue(data_create_role['status'] == 'fail')
             self.assertEqual(res_create_role_conflict.status_code, 409)
 
-    def test_delete_role(self):
+    def test_role_delete(self):
         with self.client:
             # user registration
             resp_register = Auth.register_user(self)
@@ -135,10 +135,10 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             # create role
-            res_creat_role_conflict = creat_role(self, data['access_token'])
-            data_create_role = json.loads(res_creat_role_conflict.data.decode())
+            res_create_role_conflict = create_role(self, data['access_token'])
+            data_create_role = json.loads(res_create_role_conflict.data.decode())
             self.assertTrue(data_create_role['status'] == 'success')
-            self.assertEqual(res_creat_role_conflict.status_code, 201)
+            self.assertEqual(res_create_role_conflict.status_code, 201)
 
             # delete role
             res_delete_role = delete_role(self, data['access_token'])
@@ -146,18 +146,8 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(res_delete_role.status_code, 200)
             self.assertTrue(data_delete_role['status'] == 'success')
 
-    def test_set_role(self):
+    def test_role_set(self):
         with self.client:
-            # user registration
-            resp_register = Auth.register_user(self)
-            data_register = json.loads(resp_register.data.decode())
-            self.assertTrue(data_register['status'] == 'success')
-            self.assertTrue(
-                data_register['message'] == 'Successfully registered.'
-            )
-            self.assertTrue(resp_register.content_type == 'application/json')
-            self.assertEqual(resp_register.status_code, 201)
-
             # registered user login
             response = Auth.login_user(self)
             data = json.loads(response.data.decode())
@@ -165,7 +155,7 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             # create role
-            res_create_role = creat_role(self, data['access_token'])
+            res_create_role = create_role(self, data['access_token'])
             data_create_role = json.loads(res_create_role.data.decode())
             self.assertTrue(data_create_role['status'] == 'success')
             self.assertEqual(res_create_role.status_code, 201)
@@ -174,7 +164,7 @@ class TestRoleBlueprint(BaseTestCase):
             res_info = Auth.get_info_me(self, data['access_token'])
             data_info_me = json.loads(res_info.data.decode())
             self.assertTrue(
-                data_info_me['username'] == 'vnlebaoduy'
+                data_info_me['username'] == 'admin'
             )
             self.assertTrue(res_info.content_type == 'application/json')
             self.assertEqual(res_info.status_code, 200)
@@ -184,18 +174,8 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertTrue(res_set_role.content_type == 'application/json')
             self.assertEqual(res_set_role.status_code, 201)
 
-    def test_get_role(self):
+    def test_role_get(self):
         with self.client:
-            # user registration
-            resp_register = Auth.register_user(self)
-            data_register = json.loads(resp_register.data.decode())
-            self.assertTrue(data_register['status'] == 'success')
-            self.assertTrue(
-                data_register['message'] == 'Successfully registered.'
-            )
-            self.assertTrue(resp_register.content_type == 'application/json')
-            self.assertEqual(resp_register.status_code, 201)
-
             # registered user login
             response = Auth.login_user(self)
             data = json.loads(response.data.decode())
@@ -203,7 +183,7 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             # create role
-            res_create_role = creat_role(self, data['access_token'])
+            res_create_role = create_role(self, data['access_token'])
             data_create_role = json.loads(res_create_role.data.decode())
             self.assertTrue(data_create_role['status'] == 'success')
             self.assertEqual(res_create_role.status_code, 201)
@@ -213,7 +193,7 @@ class TestRoleBlueprint(BaseTestCase):
             data_get_role = json.loads(res_get_role.data.decode())
             self.assertTrue(res_get_role.status_code == 200)
 
-    def test_update_role(self):
+    def test_role_update(self):
         with self.client:
             # user registration
             resp_register = Auth.register_user(self)
@@ -232,7 +212,7 @@ class TestRoleBlueprint(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
             # create role
-            res_create_role = creat_role(self, data['access_token'])
+            res_create_role = create_role(self, data['access_token'])
             data_create_role = json.loads(res_create_role.data.decode())
             self.assertTrue(data_create_role['status'] == 'success')
             self.assertEqual(res_create_role.status_code, 201)

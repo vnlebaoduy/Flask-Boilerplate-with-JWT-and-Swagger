@@ -5,7 +5,8 @@ import configparser
 
 from os import environ, path
 
-basedir= os.path.abspath(os.curdir)
+basedir = os.path.abspath(os.curdir)
+
 
 class Config:
     DEBUG = False
