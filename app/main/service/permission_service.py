@@ -76,8 +76,15 @@ def delete_permission_id(permission_id):
 
 
 def get_all_permission():
+    # permission = Permission.query.paginate(page=1, per_page=3, error_out=True).items
     permission = Permission.query.all()
-    return permission
+    permission_schema = PermissionSchema(many=True)
+    res_data = permission_schema.dump(permission)
+    res_obj = {
+        'status': 'success',
+        'data': res_data
+    }
+    return res_obj, 200
 
 
 def get_permission_by_id(public_id):
@@ -88,9 +95,10 @@ def get_permission_by_id(public_id):
     res_data = permission_schema.dump(permission_list)
     res_obj = {
         'status': 'success',
-        'permissions': res_data
+        'data': res_data
     }
     return res_obj, 200
+
 
 # def set_permission_role_by_ids(role_id, public_id):
 #     public_id_creator = get_jwt_identity()

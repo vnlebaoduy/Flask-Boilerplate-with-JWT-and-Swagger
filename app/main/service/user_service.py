@@ -1,7 +1,7 @@
 import uuid
 import datetime
 from app.main import db
-from app.main.model.user import User
+from app.main.model.user import User, UserSchema
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
@@ -37,7 +37,14 @@ def save_new_user(data):
 
 
 def get_all_users():
-    return User.query.all()
+    data = User.query.all()
+    users_schema = UserSchema(many=True)
+    res_data = users_schema.dump(data)
+    res_obj = {
+        'status': 'success',
+        'users': res_data
+    }
+    return res_obj, 200
 
 
 def get_a_user(public_id):

@@ -38,6 +38,12 @@ class User(db.Model):
         return cls.query.filter_by(username=username).first()
 
 
+class UserSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ("public_id", "full_name", "username", "email", "registered_on", "is_active")
+
+
 class UserRole(db.Model):
     __tablename__ = 'user_role'
 

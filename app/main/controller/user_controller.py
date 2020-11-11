@@ -2,6 +2,7 @@ from flask import request
 from flask_restplus import Resource
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, user_login
+from ..service.permission_service import get_permission_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = UserDto.api
@@ -12,7 +13,6 @@ _userLogin = UserDto.userLogin
 @api.route('/')
 class UserList(Resource):
     @api.doc('list_of_registered_users')
-    @api.marshal_list_with(_user, envelope='data')
     def get(self):
         """List all registered users"""
         return get_all_users()
@@ -28,9 +28,10 @@ class UserList(Resource):
 
 @api.route('/token')
 @api.response(403, 'Wrong credentials')
-@api.expect(_userLogin, validate=True)
 class UserLogin(Resource):
+    @api.expect(_userLogin, validate=True)
     def post(self):
+        """Login account """
         data = request.json
         return user_login(data['username'], data['password'])
 
@@ -42,9 +43,21 @@ class UserInfo(Resource):
     @jwt_required
     @api.marshal_with(_user)
     def get(self):
+        """Get account information"""
         public_id = get_jwt_identity()
         user = get_a_user(public_id)
         return user
+
+
+@api.route('/me/permission')
+@api.response(404, 'Permission not found.')
+class UserInfo(Resource):
+    @api.doc('get permission')
+    @jwt_required
+    def get(self):
+        """Get Permission By Self"""
+        public_id = get_jwt_identity()
+        return get_permission_by_id(public_id)
 
 
 @api.route('/<public_id>')

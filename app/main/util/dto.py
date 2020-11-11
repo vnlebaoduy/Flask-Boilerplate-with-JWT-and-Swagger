@@ -54,6 +54,6 @@ class PermissionDto:
         # 'created_at': fields.String(required=True, description='Ngày tạo vai trò'),
     })
 
-    set_role = api.model('permission', {
+    set_permission = api.model('permission', {
         'permission_id': fields.Arbitrary(required=True, description='Mã quyền truy cập'),
     })

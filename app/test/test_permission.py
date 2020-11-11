@@ -46,7 +46,7 @@ def update_permission(self, access_token):
 
 def get_permission_by_id(self, access_token, public_id):
     return self.client.get(
-        '/permission/getPermissionByUserId/{}'.format(public_id),
+        '/permission/get_permission_by_user_id/{}'.format(public_id),
         headers={
             'Authorization': 'Bearer {}'.format(access_token)
         },

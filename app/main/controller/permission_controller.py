@@ -14,7 +14,7 @@ _permission_create = PermissionDto.permission_create
 class PermissionList(Resource):
     @api.doc('list_of_create_permission')
     @api.response(204, 'Permission is empty')
-    @api.marshal_list_with(_permission, envelope='data')
+    # @api.marshal_list_with(_permission, envelope='data')
     @jwt_required
     def get(self):
         """List all Permission """
@@ -46,7 +46,7 @@ class DeletePermission(Resource):
         return delete_permission_id(permission_id=permission_id)
 
 
-@api.route('/getPermissionByUserId/<public_id>')
+@api.route('/get_permission_by_user_id/<public_id>')
 @api.doc('Get Permission')
 class GetPermissionUserById(Resource):
     @api.param('public_id', 'The User identifier')
