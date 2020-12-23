@@ -22,8 +22,8 @@ class RolePermission(db.Model):
     permission_id = db.Column(db.Integer, db.ForeignKey('permission.id'), primary_key=True, )
     created_at = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
     created_by = db.Column(db.String(255), nullable=True)
-    role = db.relationship(Role, backref=db.backref("permission_role_assoc"))
-    permission = db.relationship('Permission', backref=db.backref("role_permission_assoc"))
+    role = db.relationship(Role, backref=db.backref("permission_role_assoc", passive_deletes=True))
+    permission = db.relationship('Permission', backref=db.backref("role_permission_assoc", passive_deletes=True))
 
 
 class RoleSchema(ma.Schema):

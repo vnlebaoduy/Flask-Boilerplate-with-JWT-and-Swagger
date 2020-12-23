@@ -51,8 +51,8 @@ class UserRole(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
     created_by = db.Column(db.String(255), nullable=True)
-    user = db.relationship(User, backref=db.backref("role_user_assoc"))
-    role = db.relationship(Role, backref=db.backref("user_role_assoc"))
+    user = db.relationship(User, backref=db.backref("role_user_assoc", passive_deletes=True))
+    role = db.relationship(Role, backref=db.backref("user_role_assoc", passive_deletes=True))
 
     def __repr__(self):
         return "<UserRole '{} - {} - {} - {}'>".format(self.user_id, self.role_id, self.created_at, self.created_by)

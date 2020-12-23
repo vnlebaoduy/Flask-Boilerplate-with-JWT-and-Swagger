@@ -28,13 +28,13 @@ class RoleDto:
         # 'created_at': fields.String(required=True, description='Ngày tạo vai trò'),
     })
 
-    role_create = api.model('role', {
+    role_create = api.model('role_create', {
         'name': fields.String(required=True, description='Tên vai trò'),
         'description': fields.String(required=True, description='Mô tả vai trò'),
         # 'created_at': fields.String(required=True, description='Ngày tạo vai trò'),
     })
 
-    set_role = api.model('role', {
+    set_role = api.model('role_update', {
         'role_id': fields.Arbitrary(required=True, description='Mã vai trò'),
     })
 

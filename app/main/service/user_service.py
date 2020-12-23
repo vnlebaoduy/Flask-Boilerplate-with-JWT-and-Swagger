@@ -42,7 +42,7 @@ def get_all_users():
     res_data = users_schema.dump(data)
     res_obj = {
         'status': 'success',
-        'users': res_data
+        'data': res_data
     }
     return res_obj, 200
 

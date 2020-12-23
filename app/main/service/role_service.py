@@ -76,7 +76,25 @@ def delete_role_id(role_id):
 
 def get_all_role():
     role = Role.query.all()
-    return role
+    roles_schema = RoleSchema(many=True)
+    res_data = roles_schema.dump(role)
+    res_obj = {
+        'status': 'success',
+        'data': res_data
+    }
+    return res_obj
+
+
+def get_role_by_id(public_id):
+    list_role = db.session.query(Role).join(UserRole).join(User).filter(
+        User.public_id == public_id).all()
+    roles_schema = RoleSchema(many=True)
+    res_data = roles_schema.dump(list_role)
+    res_obj = {
+        'status': 'success',
+        'data': res_data
+    }
+    return res_obj
 
 
 def set_role_user_by_ids(role_id, public_id):

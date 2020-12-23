@@ -3,6 +3,7 @@ from flask_restplus import Resource
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, user_login
 from ..service.permission_service import get_permission_by_id
+from ..service.role_service import get_role_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = UserDto.api
@@ -60,6 +61,20 @@ class UserInfo(Resource):
         return get_permission_by_id(public_id)
 
 
+@api.route('/me/role')
+class User(Resource):
+    @api.doc('get role by user')
+    @jwt_required
+    def get(self):
+        """Get Role By Self"""
+        public_id = get_jwt_identity()
+        user = get_role_by_id(public_id)
+        if not user:
+            api.abort(404)
+        else:
+            return user
+
+
 @api.route('/<public_id>')
 @api.param('public_id', 'The User identifier')
 @api.response(404, 'User not found.')
@@ -68,18 +83,6 @@ class User(Resource):
     @api.marshal_with(_user)
     def get(self, public_id):
         """get a user given its identifier"""
-        user = get_a_user(public_id)
-        if not user:
-            api.abort(404)
-        else:
-            return user
-
-
-@api.route('/role')
-class User(Resource):
-    @api.doc('get role by user')
-    def get(self, public_id):
-        """get role by user"""
         user = get_a_user(public_id)
         if not user:
             api.abort(404)

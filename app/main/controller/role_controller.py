@@ -1,6 +1,7 @@
 from flask import request
 from flask_restplus import Resource, reqparse
-from ..service.role_service import get_all_role, create_role, delete_role_id, set_role_user_by_ids, update_role_by_id
+from ..service.role_service import get_all_role, create_role, delete_role_id, set_role_user_by_ids, update_role_by_id, \
+    get_role_by_id
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..util.dto import RoleDto
 
@@ -13,7 +14,7 @@ _role_create = RoleDto.role_create
 class RoleList(Resource):
     @api.doc('list_of_create_role')
     @api.response(204, 'Role is empty')
-    @api.marshal_list_with(_role, envelope='data')
+    # @api.marshal_list_with(_role, envelope='data')
     @jwt_required
     def get(self):
         """List all role users"""
@@ -45,16 +46,24 @@ class DeleteRole(Resource):
         return delete_role_id(role_id=role_id)
 
 
-@api.route('/set_role/<user_id>')
+@api.route('/user/<public_id>')
 @api.doc('set role')
 class SetRole(Resource):
-    @api.param('role_id', 'Role identifier')
+    @api.param('public_id', 'Role identifier')
     @api.response(201, 'Role successfully set.')
     @jwt_required
-    def post(self, user_id):
+    def post(self, public_id):
         """Set Role By id """
         data = request.json
-        res = set_role_user_by_ids(data['role_id'], user_id)
+        res = set_role_user_by_ids(data['role_id'], public_id)
+        return res
+
+    @api.param('role_id', 'Role identifier')
+    @api.response(200, 'Role successfully set.')
+    @jwt_required
+    def get(self, public_id):
+        """Get Role by User Id"""
+        res = get_role_by_id(public_id)
         return res
 
 
@@ -67,7 +76,7 @@ class SetRole(Resource):
     @api.response(200, 'Role successfully set.')
     @jwt_required
     def put(self):
-        """Set Role By id """
+        """Update Role"""
         data = request.json
         res = update_role_by_id(data)
         return res
